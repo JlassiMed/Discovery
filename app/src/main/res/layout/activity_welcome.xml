@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/myLayout"
+    android:background="@drawable/background_anim"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="false"
+    android:focusableInTouchMode="true"
+    android:touchscreenBlocksFocus="true"
+    >
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="275dp"
+        android:layout_height="191dp"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="200dp"
+
+        app:srcCompat="@drawable/doubletaptouch" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="397dp"
+        android:layout_height="62dp"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_marginTop="400dp"
+        android:layout_marginEnd="-66dp"
+        android:layout_marginRight="-66dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="Tap to Enter"
+        android:textStyle="bold|italic"
+        android:textSize="50dp"
+        android:fontFamily="casual"
+        android:textColor="#3f51b5" />
+
+</RelativeLayout>
