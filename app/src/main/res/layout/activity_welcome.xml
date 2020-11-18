@@ -1,41 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/myLayout"
-    android:background="@drawable/background_anim"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="false"
+    android:background="@drawable/background_anim"
     android:focusableInTouchMode="true"
-    android:touchscreenBlocksFocus="true"
-    >
-
+    android:clickable="false"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="275dp"
-        android:layout_height="191dp"
-        android:layout_marginLeft="65dp"
-        android:layout_marginTop="200dp"
-
-        app:srcCompat="@drawable/doubletaptouch" />
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/double_tap_touch" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="397dp"
-        android:layout_height="62dp"
-        android:layout_alignEnd="@+id/imageView"
-        android:layout_alignRight="@+id/imageView"
-        android:layout_marginTop="400dp"
-        android:layout_marginEnd="-66dp"
-        android:layout_marginRight="-66dp"
+        android:id="@+id/tab_to_enter_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
-        android:text="Tap to Enter"
-        android:textStyle="bold|italic"
-        android:textSize="50dp"
         android:fontFamily="casual"
-        android:textColor="#3f51b5" />
-
-</RelativeLayout>
+        android:textColor="#3f51b5"
+        android:textSize="50sp"
+        android:textStyle="bold|italic"
+        android:text="@string/tab_to_enter_text" />
+</LinearLayout>

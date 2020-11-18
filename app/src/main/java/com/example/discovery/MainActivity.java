@@ -1,13 +1,15 @@
-package com.example.disocvery;
+package com.example.discovery;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
-
-import com.example.disocvery.DB.SQLiteOperations;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
@@ -17,13 +19,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import com.example.discovery.DB.SQLiteOperations;
+import com.example.disocvery.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +29,10 @@ import java.util.concurrent.Callable;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+
+    public static final String DB_ACTION = "DB_ACTION";
+    public static final String COUNTRY_ITEM_ID_EXTRA = "COUNTRY_ITEM_ID";
+
     public static final int REQUEST_CODE_ADD_COUNTRY = 201;
     public static final int REQUEST_CODE_UPDATE_COUNTRY = 202;
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private List<Country> countryList;
     private SQLiteOperations sqliteOperations;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,15 +51,6 @@ public class MainActivity extends AppCompatActivity {
         initializeData();
         setUpRecyclerView();
         setClickListeners();
-
-
-     /*   FloatingActionButton fab = findViewById(R.id.btn_add_country);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,AddCountry.class));
-            }
-        });*/
     }
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setStatuBarColor(Activity activity, int statusBarColor) {
@@ -97,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addCountryItem() {
-        Intent intent = new Intent(MainActivity.this, AddCountry.class);
-        intent.putExtra("DB_ACTION", "add");
+        Intent intent = new Intent(MainActivity.this, AddCountryActivity.class);
+        intent.putExtra(DB_ACTION, CrudMethod.ADD);
         startActivityForResult(intent, REQUEST_CODE_ADD_COUNTRY);
     }
 
@@ -112,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateCountryItem(int position) {
         Country country = countryList.get(position);
-        Intent intent = new Intent(MainActivity.this, AddCountry.class);
-        intent.putExtra("DB_ACTION", "update");
-        intent.putExtra("MOVIE_ITEM_ID", country.getId());
+        Intent intent = new Intent(MainActivity.this, AddCountryActivity.class);
+        intent.putExtra(DB_ACTION, CrudMethod.UPDATE);
+        intent.putExtra(COUNTRY_ITEM_ID_EXTRA, country.getId());
         startActivityForResult(intent, REQUEST_CODE_UPDATE_COUNTRY);
     }
 
@@ -166,30 +160,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // On Back Press
-        if (resultCode == RESULT_CANCELED) {
-            return;
-        }
-
-        // Add Country
-        if (data != null && requestCode == REQUEST_CODE_ADD_COUNTRY && resultCode == Activity.RESULT_OK) {
-            Country country = (Country) data.getSerializableExtra("COUNTRY_ITEM");
-            sqliteOperations.addCountry(country);   // add country to DB
-            countryList.add(country);
-            countryAdapter.notifyDataSetChanged();
-        }
-
-        // Update Movie
-        if (data != null && requestCode == REQUEST_CODE_UPDATE_COUNTRY && resultCode == Activity.RESULT_OK) {
-            Country country = (Country) data.getSerializableExtra("COUNTRY_ITEM");
-            String movieItemId = data.getStringExtra("COUNTRY_ITEM_ID");
-          //  Log.d(TAG, "onActivityResult: " + country.getCountry_name() +" "+ country.getCountry_capital());
-            sqliteOperations.updateCountry(country, movieItemId);
-            if (null != sqliteOperations.getAllCountries()) {
-                countryList.clear();
-                countryList.addAll(sqliteOperations.getAllCountries());
-                countryAdapter.notifyDataSetChanged();
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            Country country = (Country) data.getSerializableExtra(AddCountryActivity.COUNTRY_INTENT_EXTRA);
+            if (country != null) {
+                if (requestCode == REQUEST_CODE_ADD_COUNTRY) {
+                    sqliteOperations.addCountry(country);
+                    countryList.add(country);
+                    countryAdapter.notifyDataSetChanged();
+                } else if (requestCode == REQUEST_CODE_UPDATE_COUNTRY) {
+                    String movieItemId = data.getStringExtra("COUNTRY_ITEM_ID");
+                    sqliteOperations.updateCountry(country, movieItemId);
+                    if (null != sqliteOperations.getAllCountries()) {
+                        countryList.clear();
+                        countryList.addAll(sqliteOperations.getAllCountries());
+                        countryAdapter.notifyDataSetChanged();
+                    }
+                }
             }
         }
     }
@@ -197,23 +183,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

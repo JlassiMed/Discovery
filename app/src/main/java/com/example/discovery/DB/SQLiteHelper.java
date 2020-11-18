@@ -1,13 +1,8 @@
-package com.example.disocvery.DB;
+package com.example.discovery.DB;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import static com.example.disocvery.DB.SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL;
-import static com.example.disocvery.DB.SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME;
-import static com.example.disocvery.DB.SQLiteContract.CountriesColumns.COLUMN_ID;
-import static com.example.disocvery.DB.SQLiteContract.CountriesColumns.TABLE_COUNTRIES;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 
@@ -25,11 +20,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         // SQL statement to create COUNTRY table
         String SQL_CREATE_COUNTRIES_TABLE =
-                "CREATE TABLE " + TABLE_COUNTRIES
-                        + "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + COLUMN_COUNTRY_NAME + " TEXT, "
+                "CREATE TABLE " + SQLiteContract.CountriesColumns.TABLE_COUNTRIES
+                        + "(" + SQLiteContract.CountriesColumns.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME + " TEXT, "
                        // + COLUMN_COUNTRY_FLAG + " BLOB,"
-                        + COLUMN_COUNTRY_CAPITAL + " TEXT);"
+                        + SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL + " TEXT);"
                         ;
 
         // Create countries table

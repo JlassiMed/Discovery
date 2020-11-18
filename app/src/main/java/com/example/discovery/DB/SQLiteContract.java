@@ -1,6 +1,7 @@
-package com.example.disocvery.DB;
+package com.example.discovery.DB;
 
 import android.provider.BaseColumns;
+
 public class SQLiteContract {
     private SQLiteContract() {
     }

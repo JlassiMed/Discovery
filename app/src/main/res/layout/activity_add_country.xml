@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:background="@drawable/background_anim"
     android:padding="30dp"
-    tools:context=".AddCountry">
+    tools:context="com.example.discovery.AddCountryActivity">
 
 
 
