@@ -81,14 +81,10 @@ public class SQLiteOperations {
     // Get All Countries
     public List<Country> getAllCountries() {
         List<Country> countries = new LinkedList<>();
-
-        // 1. build the query
         String query = "SELECT * FROM countries;";
 
-        // 2. get reference to writable com.example.discovery.DB
         SQLiteDatabase db = sqliteHelper.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-
         if (cursor != null) {
             Country country;
             if (cursor.moveToFirst()) {
@@ -104,23 +100,22 @@ public class SQLiteOperations {
             Log.d("getAllCountries()", countries.toString());
             cursor.close();
         }
-        // return countries
         return countries;
     }
 
     // Updating single country
-    public void updateCountry(Country country, String countryItemId) {
+    public void updateCountry(Country country) {
         ContentValues values = new ContentValues();
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME, country.getCountryName());
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL, country.getCountryCapital());
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG, country.getCountryFlag());
         SQLiteDatabase db = sqliteHelper.getWritableDatabase();
-
+        String[] selectionArgs = { "" + country.getId() };
         db.update(
                 SQLiteContract.CountriesColumns.TABLE_COUNTRIES,
                 values,
                 SQLiteContract.CountriesColumns.COLUMN_ID + " = ?",
-                new String[]{countryItemId});
+                selectionArgs);
         db.close();
     }
 

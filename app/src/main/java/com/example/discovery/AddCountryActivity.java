@@ -1,7 +1,6 @@
 package com.example.discovery;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import android.graphics.Bitmap;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 
 import com.example.discovery.DB.SQLiteOperations;
 import com.example.disocvery.R;
@@ -25,8 +23,6 @@ import com.example.disocvery.R;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 
 import static com.example.discovery.MainActivity.COUNTRY_ITEM_ID_EXTRA;
@@ -40,10 +36,10 @@ public class AddCountryActivity extends AppCompatActivity {
     private EditText etCountryCapital;
     private ImageView countryFlag;
     private Uri uri;
-
+    private Country currentCountry;
     private String countryFlagPath;
     public CrudMethod crudMethod;
-    private int CountryItemId;
+    private int countryItemId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +72,12 @@ public class AddCountryActivity extends AppCompatActivity {
 
                 case UPDATE:
                     btnAddUpdateCountry.setText(getString(R.string.update_country_text));
-                    CountryItemId = intent.getIntExtra(COUNTRY_ITEM_ID_EXTRA, 0);
-                    Country countryItem = sqliteOperations.getCountry(CountryItemId);
-                    etCountryName.setText(countryItem.getCountryName());
-                    etCountryCapital.setText(countryItem.getCountryCapital());
-                    countryFlag.setImageURI(Uri.parse(new File(countryItem.getCountryFlag()).toString()));
+                    countryItemId = intent.getIntExtra(COUNTRY_ITEM_ID_EXTRA, -1);
+                    currentCountry = sqliteOperations.getCountry(countryItemId);
+                    etCountryName.setText(currentCountry.getCountryName());
+                    etCountryCapital.setText(currentCountry.getCountryCapital());
+                    countryFlagPath = currentCountry.getCountryFlag();
+                    countryFlag.setImageURI(Uri.parse(new File(currentCountry.getCountryFlag()).toString()));
                     break;
             }
 
@@ -153,10 +150,30 @@ public class AddCountryActivity extends AppCompatActivity {
         if (hasValidInput(etCountryName, etCountryCapital)) {
             String name = etCountryName.getText().toString();
             String capital = etCountryCapital.getText().toString();
-            Country countryItem = new Country(capital, name, countryFlagPath);
+            currentCountry.setCountryName(name);
+            currentCountry.setCountryCapital(capital);
+
+            if (uri != null) {
+                String filename = uri.getPath().substring(uri.getPath().lastIndexOf("/") + 1);
+                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                if (storageDir != null) {
+                    countryFlagPath = storageDir.getAbsolutePath() + "/" + filename + ".jpg";
+                    File file = new File(storageDir.getAbsolutePath(), filename);
+                    try {
+                        FileOutputStream out = new FileOutputStream(file + ".jpg");
+                        createImageFromUri(uri).compress(Bitmap.CompressFormat.JPEG, 100, out);
+                        out.flush();
+                        out.close();
+                        currentCountry.setCountryFlag(countryFlagPath);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("COUNTRY", countryItem);
-            intent.putExtra("COUNTRY_ID", String.valueOf(CountryItemId));
+            intent.putExtra(COUNTRY_INTENT_EXTRA, currentCountry);
+            intent.putExtra(COUNTRY_ITEM_ID_EXTRA, currentCountry.getId());
             setResult(RESULT_OK, intent);
             finish();
         }

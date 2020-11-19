@@ -1,8 +1,6 @@
 package com.example.discovery;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,23 +11,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.disocvery.R;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.List;
 
 public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Country> countryList;
     private Context context;
-    private static CountryItemClicked countryItemClicked;
+    private CountryItemClicked countryItemClicked;
 
-    CountryAdapter(List<Country> countryList, Context context) {
+    CountryAdapter(List<Country> countryList, Context context, CountryItemClicked countryItemClicked) {
         this.countryList = countryList;
         this.context = context;
+        this.countryItemClicked = countryItemClicked;
     }
 
     @NonNull
@@ -46,6 +41,7 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         countriesViewHolder.tvCountryName.setText(countryItem.getCountryName());
         countriesViewHolder.tvCountryCapital.setText(countryItem.getCountryCapital());
         countriesViewHolder.tvCountryFlag.setImageURI(Uri.parse(countryItem.getCountryFlag()));
+        countriesViewHolder.itemView.setOnClickListener(v -> countryItemClicked.onCountryItemClicked(position));
     }
 
     @Override
@@ -67,15 +63,10 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvCountryName = itemView.findViewById(R.id.country_name);
             tvCountryCapital = itemView.findViewById(R.id.country_capital);
             tvCountryFlag = itemView.findViewById(R.id.country_flag);
-            itemView.setOnClickListener(view -> countryItemClicked.onCountryItemClicked(itemView, CountriesViewHolder.this.getAdapterPosition()));
         }
     }
 
     interface CountryItemClicked {
-        void onCountryItemClicked(View view, int position);
-    }
-
-    static void setCountryItemClickListener(CountryItemClicked countryItemClicked) {
-        CountryAdapter.countryItemClicked = countryItemClicked;
+        void onCountryItemClicked(int position);
     }
 }

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CountryAdapter.CountryItemClicked {
     private static final String TAG = "MainActivity";
 
     public static final String DB_ACTION = "DB_ACTION";
@@ -47,47 +47,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initializeViews();
-        initializeData();
-        setUpRecyclerView();
-        setClickListeners();
-    }
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void setStatuBarColor(Activity activity, int statusBarColor) {
-        Window window = activity.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(activity, statusBarColor));
-        window.requestFeature(window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN, WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
-    private void initializeData() {
+
+        recyclerCountries = findViewById(R.id.recycler_countries);
+        btnAddCountry = findViewById(R.id.btn_add_country);
+        btnDeleteAll = findViewById(R.id.btn_delete_all_countries);
+
         linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         countryList = new ArrayList<>();
         sqliteOperations = new SQLiteOperations(this);
-    }
-    private void initializeViews() {
-        recyclerCountries = findViewById(R.id.recycler_countries);
-        btnAddCountry = findViewById(R.id.btn_add_country);
-        btnDeleteAll = findViewById(R.id.btn_delete_all_countries);
-    }
-    private void setUpRecyclerView() {
-        if (null != sqliteOperations.getAllCountries()) {
-            countryList = sqliteOperations.getAllCountries();   // get all countries from db
-        }
-        countryAdapter = new CountryAdapter(countryList, this);
+        countryList = sqliteOperations.getAllCountries();
+        countryAdapter = new CountryAdapter(countryList, this, this);
         recyclerCountries.setLayoutManager(linearLayoutManager);
         recyclerCountries.setAdapter(countryAdapter);
         recyclerCountries.setHasFixedSize(true);
-    }
-    private void setClickListeners() {
+
+
         btnAddCountry.setOnClickListener(view -> addCountryItem());
+
         btnDeleteAll.setOnClickListener(view -> dialogActionMessage(this, "", "Delete all items?", "YES", "CANCEL", () -> deleteAll(), null, false));
-        CountryAdapter.setCountryItemClickListener((view, position) -> updateCountryItem(position));
         swipeToDelete();
+
     }
 
     private void addCountryItem() {
@@ -168,8 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     countryList.add(country);
                     countryAdapter.notifyDataSetChanged();
                 } else if (requestCode == REQUEST_CODE_UPDATE_COUNTRY) {
-                    String movieItemId = data.getStringExtra(COUNTRY_ITEM_ID_EXTRA);
-                    sqliteOperations.updateCountry(country, movieItemId);
+                    sqliteOperations.updateCountry(country);
                     if (null != sqliteOperations.getAllCountries()) {
                         countryList.clear();
                         countryList.addAll(sqliteOperations.getAllCountries());
@@ -194,5 +174,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCountryItemClicked(int position) {
+        updateCountryItem(position);
     }
 }
