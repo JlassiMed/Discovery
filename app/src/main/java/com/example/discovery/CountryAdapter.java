@@ -1,6 +1,9 @@
 package com.example.discovery;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.disocvery.R;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -38,6 +45,7 @@ public class CountryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         CountriesViewHolder countriesViewHolder = (CountriesViewHolder) holder;
         countriesViewHolder.tvCountryName.setText(countryItem.getCountryName());
         countriesViewHolder.tvCountryCapital.setText(countryItem.getCountryCapital());
+        countriesViewHolder.tvCountryFlag.setImageURI(Uri.parse(countryItem.getCountryFlag()));
     }
 
     @Override

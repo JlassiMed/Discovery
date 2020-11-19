@@ -24,6 +24,7 @@ public class SQLiteOperations {
         ContentValues values = new ContentValues();
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME, country.getCountryName());
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL, country.getCountryCapital());
+        values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG, country.getCountryFlag());
         SQLiteDatabase db = sqliteHelper.getWritableDatabase();
 
         db.insert(
@@ -40,6 +41,7 @@ public class SQLiteOperations {
                 SQLiteContract.CountriesColumns.COLUMN_ID,
                 SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME,
                 SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL,
+                SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG
         };
 
         String selection = SQLiteContract.CountriesColumns.COLUMN_ID + " = ?";
@@ -66,6 +68,7 @@ public class SQLiteOperations {
                 country.setId(cursor.getInt(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_ID)));
                 country.setCountryName(cursor.getString(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME)));
                 country.setCountryCapital(cursor.getString(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL)));
+                country.setCountryFlag(cursor.getString(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG)));
                 Log.d("getCountry(" + id + ")", country.toString());
             }
             cursor.close();
@@ -94,6 +97,7 @@ public class SQLiteOperations {
                     country.setId(cursor.getInt(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_ID)));
                     country.setCountryName(cursor.getString(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME)));
                     country.setCountryCapital(cursor.getString(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL)));
+                    country.setCountryFlag(cursor.getString(cursor.getColumnIndex(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG)));
                     countries.add(country);
                 } while (cursor.moveToNext());
             }
@@ -109,6 +113,7 @@ public class SQLiteOperations {
         ContentValues values = new ContentValues();
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME, country.getCountryName());
         values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL, country.getCountryCapital());
+        values.put(SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG, country.getCountryFlag());
         SQLiteDatabase db = sqliteHelper.getWritableDatabase();
 
         db.update(

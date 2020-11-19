@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import static com.example.discovery.DB.SQLiteContract.CountriesColumns.COLUMN_COUNTRY_FLAG;
+
 public class SQLiteHelper extends SQLiteOpenHelper {
 
     // Database Version
@@ -23,7 +25,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + SQLiteContract.CountriesColumns.TABLE_COUNTRIES
                         + "(" + SQLiteContract.CountriesColumns.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + SQLiteContract.CountriesColumns.COLUMN_COUNTRY_NAME + " TEXT, "
-                       // + COLUMN_COUNTRY_FLAG + " BLOB,"
+                         + COLUMN_COUNTRY_FLAG + " TEXT,"
                         + SQLiteContract.CountriesColumns.COLUMN_COUNTRY_CAPITAL + " TEXT);"
                         ;
 

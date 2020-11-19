@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                     countryList.add(country);
                     countryAdapter.notifyDataSetChanged();
                 } else if (requestCode == REQUEST_CODE_UPDATE_COUNTRY) {
-                    String movieItemId = data.getStringExtra("COUNTRY_ITEM_ID");
+                    String movieItemId = data.getStringExtra(COUNTRY_ITEM_ID_EXTRA);
                     sqliteOperations.updateCountry(country, movieItemId);
                     if (null != sqliteOperations.getAllCountries()) {
                         countryList.clear();

@@ -14,7 +14,7 @@ public class SQLiteContract {
         static final String COLUMN_ID = "id";
         static final String COLUMN_COUNTRY_NAME = "country_name";
         static final String COLUMN_COUNTRY_CAPITAL = "country_capital";
-       // static final String COLUMN_COUNTRY_FLAG = "country_flag";
+        static final String COLUMN_COUNTRY_FLAG = "country_flag";
 
     }
 }
